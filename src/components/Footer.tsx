@@ -8,9 +8,16 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Brand */}
           <div className="space-y-4">
-            <h3 className="text-xl font-serif font-bold text-primary">
-              .sahasclout
-            </h3>
+            <div className="flex items-center space-x-2">
+              <img 
+                src="https://i.postimg.cc/yx3FTNGB/Whats-App-Image-2025-11-13-at-18-15-59-4f01a7d0.jpg" 
+                alt="saha's Clout Logo" 
+                className="h-10 w-10 object-contain transition-transform duration-300 hover:scale-110"
+              />
+              <h3 className="text-xl font-serif font-bold text-primary transition-transform duration-300 hover:scale-105">
+                saha's Clout
+              </h3>
+            </div>
             <p className="text-sm text-muted-foreground">
               Handmade gifts crafted with love. Each piece tells a story.
             </p>
@@ -49,7 +56,7 @@ export default function Footer() {
                 <MessageCircle className="h-5 w-5" />
               </a>
               <a 
-                href="https://instagram.com" 
+                href="https://instagram.com/_sahasclout_" 
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="text-muted-foreground hover:text-primary transition-colors"
@@ -57,7 +64,7 @@ export default function Footer() {
                 <Instagram className="h-5 w-5" />
               </a>
               <a 
-                href="mailto:subhangi@sahasclout.com"
+                href="mailto:Sahasclout@gmail.com"
                 className="text-muted-foreground hover:text-primary transition-colors"
               >
                 <Mail className="h-5 w-5" />
@@ -71,7 +78,17 @@ export default function Footer() {
         </div>
 
         <div className="border-t border-border mt-8 pt-8 text-center text-sm text-muted-foreground">
-          <p>&copy; 2025 .sahasclout. Handcrafted with ❤️</p>
+          <p>&copy; 2025 saha's Clout. Handcrafted with ❤️</p>
+          <p className="mt-2">
+            <a 
+              href="https://instagram.com/anikettt.tsx" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="text-primary hover:underline"
+            >
+              Developed By: BakwasssCoder
+            </a>
+          </p>
         </div>
       </div>
     </footer>

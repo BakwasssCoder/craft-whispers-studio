@@ -6,39 +6,21 @@ export default function Gallery() {
   const galleryImages = [
     {
       id: 1,
-      src: 'https://images.unsplash.com/photo-1578749556568-bc2c40e68b61?w=800&h=800&fit=crop',
-      alt: 'Embroidered wall art',
-      category: 'Fabric Art',
+      src: 'https://stitched-with-love2.odoo.com/html_editor/image_shape/website.s_image_text_default_image/html_builder/composition/composition_mixed_1.svg?c1=o-color-2&c2=o-color-2&c5=o-color-5',
+      alt: 'Our Creations',
+      category: 'Embroidery',
     },
     {
       id: 2,
-      src: 'https://images.unsplash.com/photo-1549465220-1a8b9238cd48?w=800&h=800&fit=crop',
-      alt: 'Gift hamper',
-      category: 'Hampers',
+      src: 'https://stitched-with-love2.odoo.com/web/image/1052-a3139396/name.webp',
+      alt: 'Our Work',
+      category: 'Designs',
     },
     {
       id: 3,
-      src: 'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=800&h=800&fit=crop',
-      alt: 'Handcrafted jewelry',
-      category: 'Jewelry',
-    },
-    {
-      id: 4,
-      src: 'https://images.unsplash.com/photo-1565688534245-05d6b5be184a?w=800&h=800&fit=crop',
-      alt: 'Fabric coasters',
-      category: 'Home Decor',
-    },
-    {
-      id: 5,
-      src: 'https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?w=800&h=800&fit=crop',
-      alt: 'Macrame wall art',
-      category: 'Fabric Art',
-    },
-    {
-      id: 6,
-      src: 'https://images.unsplash.com/photo-1513885535751-8b9238bd345a?w=800&h=800&fit=crop',
-      alt: 'Wedding hamper',
-      category: 'Hampers',
+      src: 'https://stitched-with-love2.odoo.com/web/image/website.library_image_10',
+      alt: 'Our Collection',
+      category: 'Collection',
     },
   ];
 

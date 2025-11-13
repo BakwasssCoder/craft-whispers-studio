@@ -17,35 +17,35 @@ export default function Index() {
   const textY = useTransform(scrollYProgress, [0, 1], ['0%', '50%']);
   const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
 
-  // Mock featured products
+  // New featured products based on user's request
   const featuredProducts = [
     {
       id: '1',
-      name: 'Embroidered Wall Hanging',
-      price: 1299,
-      image: 'https://images.unsplash.com/photo-1578749556568-bc2c40e68b61?w=500&h=500&fit=crop',
-      category: 'Fabric Art',
+      name: 'Earings',
+      price: 59,
+      image: 'https://stitched-with-love2.odoo.com/web/image/product.product/2/image_1024/Earings?unique=bf9ba13',
+      category: 'Earings',
     },
     {
       id: '2',
-      name: 'Custom Gift Hamper',
-      price: 2499,
-      image: 'https://images.unsplash.com/photo-1549465220-1a8b9238cd48?w=500&h=500&fit=crop',
-      category: 'Hampers',
+      name: 'Custom Hijab Design',
+      price: 800,
+      image: 'https://stitched-with-love2.odoo.com/web/image/product.product/6/image_1024/Custom%20Hijab%20Design?unique=b46a5d9',
+      category: 'Hijab',
     },
     {
       id: '3',
-      name: 'Handcrafted Jewelry Set',
-      price: 899,
-      image: 'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=500&h=500&fit=crop',
-      category: 'Jewelry',
+      name: 'Leaf style brooches',
+      price: 200,
+      image: 'https://stitched-with-love2.odoo.com/web/image/product.product/7/image_1024/Leaf%20style%20brooches?unique=d62a7d8',
+      category: 'Jewellery',
     },
     {
       id: '4',
-      name: 'Fabric Coasters Set',
-      price: 449,
-      image: 'https://images.unsplash.com/photo-1565688534245-05d6b5be184a?w=500&h=500&fit=crop',
-      category: 'Home Decor',
+      name: 'Embroidery hijab',
+      price: 1900,
+      image: 'https://stitched-with-love2.odoo.com/web/image/product.product/13/image_1024/Embroidery%20hijab?unique=d86ef6c',
+      category: 'Hijab',
     },
   ];
 
@@ -200,6 +200,79 @@ export default function Index() {
               </Link>
             </Button>
           </motion.div>
+        </div>
+      </motion.section>
+
+      {/* Wow Effect Images */}
+      <motion.section
+        className="py-20 bg-gradient-to-br from-background to-card"
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true, margin: '-100px' }}
+        transition={{ duration: 0.6 }}
+      >
+        <div className="container mx-auto px-4">
+          <motion.div
+            className="text-center mb-12"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+          >
+            <h2 className="text-4xl md:text-5xl font-serif font-bold mb-4">
+              Our Creations
+            </h2>
+            <p className="text-muted-foreground text-lg">
+              Explore our handcrafted embroidery designs
+            </p>
+          </motion.div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <motion.div 
+              className="group relative overflow-hidden rounded-2xl shadow-lg transform transition-transform duration-500 hover:scale-105"
+              initial={{ opacity: 0, y: 50 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+            >
+              <img 
+                src="https://stitched-with-love2.odoo.com/html_editor/image_shape/website.s_image_text_default_image/html_builder/composition/composition_mixed_1.svg?c1=o-color-2&c2=o-color-2&c5=o-color-5" 
+                alt="Our Creations" 
+                className="w-full h-auto object-cover transition-transform duration-700 group-hover:scale-110"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            </motion.div>
+            
+            <motion.div 
+              className="group relative overflow-hidden rounded-2xl shadow-lg transform transition-transform duration-500 hover:scale-105"
+              initial={{ opacity: 0, y: 50 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+            >
+              <img 
+                src="https://stitched-with-love2.odoo.com/web/image/1052-a3139396/name.webp" 
+                alt="Our Work" 
+                className="w-full h-auto object-cover transition-transform duration-700 group-hover:scale-110"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            </motion.div>
+            
+            <motion.div 
+              className="group relative overflow-hidden rounded-2xl shadow-lg transform transition-transform duration-500 hover:scale-105"
+              initial={{ opacity: 0, y: 50 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.3 }}
+            >
+              <img 
+                src="https://stitched-with-love2.odoo.com/web/image/website.library_image_10" 
+                alt="Our Collection" 
+                className="w-full h-auto object-cover transition-transform duration-700 group-hover:scale-110"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            </motion.div>
+          </div>
         </div>
       </motion.section>
 

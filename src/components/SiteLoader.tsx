@@ -72,16 +72,18 @@ export default function SiteLoader({ isLoading, onComplete }: SiteLoaderProps) {
               />
             </motion.svg>
             
-            {/* Center text */}
+            {/* Center logo */}
             <motion.div
               className="absolute inset-0 flex items-center justify-center"
               initial={{ scale: 0, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               transition={{ duration: 0.5, delay: 0.8 }}
             >
-              <span className="text-2xl font-serif font-bold text-primary">
-                .sahasclout
-              </span>
+              <img 
+                src="https://i.postimg.cc/yx3FTNGB/Whats-App-Image-2025-11-13-at-18-15-59-4f01a7d0.jpg" 
+                alt="saha's Clout Logo" 
+                className="h-24 w-24 object-contain"
+              />
             </motion.div>
           </div>
         </motion.div>

@@ -3,9 +3,11 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import WhatsAppButton from '@/components/WhatsAppButton';
 import { CreditCard } from 'lucide-react';
+import { useCart } from '@/context/CartContext';
 
 export default function Checkout() {
-  const cartTotal = 4996;
+  const { getCartTotal } = useCart();
+  const cartTotal = getCartTotal();
 
   return (
     <div className="min-h-screen py-12">
@@ -87,11 +89,11 @@ export default function Checkout() {
               <div className="space-y-3 mb-6">
                 <div className="flex justify-between text-sm">
                   <span className="text-muted-foreground">Subtotal</span>
-                  <span className="font-semibold">₹{cartTotal - 99}</span>
+                  <span className="font-semibold">₹{cartTotal}</span>
                 </div>
                 <div className="flex justify-between text-sm">
                   <span className="text-muted-foreground">Shipping</span>
-                  <span className="font-semibold">₹99</span>
+                  <span className="font-semibold">Calculated at checkout based on delivery location (PAN India Delivery)</span>
                 </div>
                 <div className="border-t border-border pt-3">
                   <div className="flex justify-between">
@@ -101,7 +103,7 @@ export default function Checkout() {
                 </div>
               </div>
               <div className="space-y-2 text-xs text-muted-foreground">
-                <p>• Shipping within 5-10 business days</p>
+                <p>• PAN India Delivery</p>
                 <p>• Secure payment processing</p>
                 <p>• WhatsApp order confirmation</p>
               </div>

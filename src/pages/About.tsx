@@ -7,33 +7,56 @@ export default function About() {
         {/* Header */}
         <div className="text-center mb-12">
           <h1 className="text-4xl md:text-5xl font-serif font-bold mb-4">
-            About .sahasclout
+            About saha's Clout
           </h1>
           <p className="text-muted-foreground text-lg">
             Handcrafted stories, one piece at a time
           </p>
         </div>
 
-        {/* Story */}
-        <div className="prose prose-lg max-w-none space-y-6 text-muted-foreground">
+        {/* Our Mission */}
+        <div className="prose prose-lg max-w-none space-y-6 text-muted-foreground mb-16">
+          <h2 className="text-3xl font-serif font-bold text-foreground">Our Mission</h2>
           <p className="text-xl leading-relaxed">
-            Hi, I'm <span className="font-semibold text-foreground">Subhangi Saha</span> — 
-            the heart and hands behind .sahasclout. I craft small-batch items with care, 
-            turning fabric, thread, and imagination into pieces that tell a story.
+            Create personalized gifts to show your love and appreciation for your friends and family.
           </p>
-
+          
           <p>
-            Every product you see here is handmade by me in my studio. From embroidered 
-            wall hangings to custom gift hampers and handcrafted jewelry, each piece carries 
-            the warmth of handwork and the uniqueness that only handmade items can offer.
+            To do so, we collaborate with local artisans who care about quality and craft their pieces with passion.
           </p>
+        </div>
 
-          <p>
-            What started as a passion project has grown into a small business that celebrates 
-            the beauty of slow, intentional craftsmanship. I believe in creating meaningful 
-            gifts that connect people and carry emotions — whether it's a birthday surprise, 
-            a wedding gift, or a piece of art for your home.
+        {/* The Embroidery Experience */}
+        <div className="prose prose-lg max-w-none space-y-6 text-muted-foreground mb-16">
+          <h2 className="text-3xl font-serif font-bold text-foreground">The Embroidery Experience</h2>
+          <p className="text-xl leading-relaxed">
+            From custom designs to your door, discover how we create unique embroidery pieces that bring joy to your life.
           </p>
+        </div>
+
+        {/* Our Creations */}
+        <div className="prose prose-lg max-w-none space-y-6 text-muted-foreground mb-16">
+          <h2 className="text-3xl font-serif font-bold text-foreground">Our Creations</h2>
+          <p className="text-xl leading-relaxed">
+            Explore our handcrafted embroidery designs, each meticulously crafted to convey beauty, elegance, and a touch of artistry.
+          </p>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
+            <div>
+              <img 
+                src="https://stitched-with-love2.odoo.com/html_editor/image_shape/website.s_text_image_default_image/html_builder/solid/solid_blob_shadow_2.svg?c2=o-color-2" 
+                alt="Our Creations" 
+                className="w-full h-auto rounded-lg"
+              />
+            </div>
+            <div>
+              <img 
+                src="https://stitched-with-love2.odoo.com/html_editor/image_shape/website.s_image_text_default_image/html_builder/composition/composition_mixed_1.svg?c1=o-color-2&c2=o-color-2&c5=o-color-5" 
+                alt="Our Creations" 
+                className="w-full h-auto rounded-lg"
+              />
+            </div>
+          </div>
         </div>
 
         {/* Values */}

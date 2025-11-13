@@ -2,31 +2,13 @@ import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import WhatsAppButton from '@/components/WhatsAppButton';
 import { Trash2, Plus, Minus, ShoppingBag } from 'lucide-react';
+import { useCart } from '@/context/CartContext';
 
 export default function Cart() {
-  // Mock cart items
-  const cartItems = [
-    {
-      id: '1',
-      name: 'Embroidered Wall Hanging',
-      price: 1299,
-      quantity: 1,
-      image: 'https://images.unsplash.com/photo-1578749556568-bc2c40e68b61?w=200&h=200&fit=crop',
-      variant: 'Medium (18x18)',
-    },
-    {
-      id: '2',
-      name: 'Custom Gift Hamper',
-      price: 2499,
-      quantity: 2,
-      image: 'https://images.unsplash.com/photo-1549465220-1a8b9238cd48?w=200&h=200&fit=crop',
-      variant: 'Deluxe',
-    },
-  ];
-
-  const subtotal = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
-  const shipping = 99;
-  const total = subtotal + shipping;
+  const { cartItems, updateQuantity, removeFromCart, getCartTotal } = useCart();
+  
+  const subtotal = getCartTotal();
+  const shippingText = "Calculated at checkout based on delivery location (PAN India Delivery)";
 
   return (
     <div className="min-h-screen py-12">
@@ -64,15 +46,24 @@ export default function Cart() {
                     <p className="text-primary font-bold">₹{item.price}</p>
                   </div>
                   <div className="flex flex-col items-end justify-between">
-                    <button className="text-destructive hover:text-destructive/80">
+                    <button 
+                      className="text-destructive hover:text-destructive/80"
+                      onClick={() => removeFromCart(item.id)}
+                    >
                       <Trash2 className="h-5 w-5" />
                     </button>
                     <div className="flex items-center gap-2">
-                      <button className="w-8 h-8 rounded-full border border-border flex items-center justify-center hover:bg-muted">
+                      <button 
+                        className="w-8 h-8 rounded-full border border-border flex items-center justify-center hover:bg-muted"
+                        onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                      >
                         <Minus className="h-4 w-4" />
                       </button>
                       <span className="w-8 text-center font-semibold">{item.quantity}</span>
-                      <button className="w-8 h-8 rounded-full border border-border flex items-center justify-center hover:bg-muted">
+                      <button 
+                        className="w-8 h-8 rounded-full border border-border flex items-center justify-center hover:bg-muted"
+                        onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                      >
                         <Plus className="h-4 w-4" />
                       </button>
                     </div>
@@ -92,12 +83,12 @@ export default function Cart() {
                   </div>
                   <div className="flex justify-between text-sm">
                     <span className="text-muted-foreground">Shipping</span>
-                    <span className="font-semibold">₹{shipping}</span>
+                    <span className="font-semibold text-sm">{shippingText}</span>
                   </div>
                   <div className="border-t border-border pt-3">
                     <div className="flex justify-between">
                       <span className="font-semibold">Total</span>
-                      <span className="font-bold text-xl text-primary">₹{total}</span>
+                      <span className="font-bold text-xl text-primary">₹{subtotal}</span>
                     </div>
                   </div>
                 </div>
@@ -106,8 +97,7 @@ export default function Cart() {
                     <Link to="/checkout">Proceed to Checkout</Link>
                   </Button>
                   <WhatsAppButton
-                    productName="Cart Items"
-                    qty={cartItems.reduce((sum, item) => sum + item.quantity, 0)}
+                    cartItems={cartItems}
                     className="w-full"
                   />
                 </div>
