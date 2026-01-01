@@ -8,7 +8,6 @@ import { useFeaturedProducts } from '@/hooks/useProducts';
 import { useHeroBanners } from '@/hooks/useHeroBanners';
 import { useGalleryImages } from '@/hooks/useGallery';
 import { ProductCardSkeleton } from '@/components/skeletons/ProductCardSkeleton';
-import { HeroSkeleton } from '@/components/skeletons/HeroSkeleton';
 
 export default function Index() {
   const heroRef = useRef<HTMLDivElement>(null);
@@ -28,10 +27,6 @@ export default function Index() {
   const activeBanner = heroBanners?.find(b => b.is_active);
   const displayGallery = galleryImages?.slice(0, 3) || [];
 
-  if (heroLoading) {
-    return <HeroSkeleton />;
-  }
-
   return (
     <div className="min-h-screen">
       {/* Hero Section with Parallax */}
@@ -39,61 +34,78 @@ export default function Index() {
         ref={heroRef}
         className="relative h-[85vh] md:h-[80vh] flex items-center justify-center overflow-hidden"
       >
-        <motion.div
-          className="absolute inset-0"
-          style={{ y: imageY }}
-        >
-          {activeBanner && (
-            <img
-              src={activeBanner.image_url}
-              alt="Handmade crafts"
-              className="w-full h-full object-cover scale-110"
-              loading="eager"
-            />
-          )}
-          <div className="absolute inset-0 bg-gradient-to-b from-background/60 via-background/40 to-background" />
-        </motion.div>
+        {heroLoading ? (
+          <div className="absolute inset-0 bg-muted animate-pulse" />
+        ) : (
+          <motion.div
+            className="absolute inset-0"
+            style={{ y: imageY }}
+          >
+            {activeBanner && (
+              <img
+                src={activeBanner.image_url}
+                alt="Handmade crafts"
+                className="w-full h-full object-cover scale-110"
+                loading="eager"
+              />
+            )}
+            <div className="absolute inset-0 bg-gradient-to-b from-background/60 via-background/40 to-background" />
+          </motion.div>
+        )}
         
         <motion.div
           className="relative z-10 text-center px-4"
           style={{ y: textY, opacity }}
         >
-          <motion.h1
-            className="text-4xl sm:text-5xl md:text-7xl font-serif font-bold text-foreground mb-4 md:mb-6"
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: 'easeOut' }}
-          >
-            {activeBanner?.title.split(' ').slice(0, 2).join(' ')}<br />
-            <span className="text-primary">{activeBanner?.title.split(' ').slice(2).join(' ') || 'Made with Love'}</span>
-          </motion.h1>
-          <motion.p
-            className="text-lg md:text-xl lg:text-2xl text-foreground/80 mb-6 md:mb-8 max-w-2xl mx-auto px-4"
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2, ease: 'easeOut' }}
-          >
-            {activeBanner?.subtitle}
-          </motion.p>
-          <motion.div
-            className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center px-4"
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.4, ease: 'easeOut' }}
-          >
-            <Button asChild variant="hero" size="lg" className="w-full sm:w-auto">
-              <Link to={activeBanner?.cta_link || '/shop'} className="gap-2">
-                {activeBanner?.cta_text || 'Shop Now'}
-                <ArrowRight className="h-5 w-5" />
-              </Link>
-            </Button>
-            <Button asChild variant="gold" size="lg" className="w-full sm:w-auto">
-              <Link to="/custom-order" className="gap-2">
-                <Sparkles className="h-5 w-5" />
-                Custom Order
-              </Link>
-            </Button>
-          </motion.div>
+          {heroLoading ? (
+            <div className="space-y-6">
+              <div className="h-16 w-80 bg-muted/50 rounded mx-auto animate-pulse" />
+              <div className="h-8 w-96 bg-muted/50 rounded mx-auto animate-pulse" />
+              <div className="flex gap-4 justify-center">
+                <div className="h-12 w-32 bg-muted/50 rounded animate-pulse" />
+                <div className="h-12 w-40 bg-muted/50 rounded animate-pulse" />
+              </div>
+            </div>
+          ) : (
+            <>
+              <motion.h1
+                className="text-4xl sm:text-5xl md:text-7xl font-serif font-bold text-foreground mb-4 md:mb-6"
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, ease: 'easeOut' }}
+              >
+                {activeBanner?.title.split(' ').slice(0, 2).join(' ')}<br />
+                <span className="text-primary">{activeBanner?.title.split(' ').slice(2).join(' ') || 'Made with Love'}</span>
+              </motion.h1>
+              <motion.p
+                className="text-lg md:text-xl lg:text-2xl text-foreground/80 mb-6 md:mb-8 max-w-2xl mx-auto px-4"
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.2, ease: 'easeOut' }}
+              >
+                {activeBanner?.subtitle}
+              </motion.p>
+              <motion.div
+                className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center px-4"
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.4, ease: 'easeOut' }}
+              >
+                <Button asChild variant="hero" size="lg" className="w-full sm:w-auto">
+                  <Link to={activeBanner?.cta_link || '/shop'} className="gap-2">
+                    {activeBanner?.cta_text || 'Shop Now'}
+                    <ArrowRight className="h-5 w-5" />
+                  </Link>
+                </Button>
+                <Button asChild variant="gold" size="lg" className="w-full sm:w-auto">
+                  <Link to="/custom-order" className="gap-2">
+                    <Sparkles className="h-5 w-5" />
+                    Custom Order
+                  </Link>
+                </Button>
+              </motion.div>
+            </>
+          )}
         </motion.div>
       </section>
 
@@ -108,9 +120,9 @@ export default function Index() {
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
             {[
-              { icon: Heart, title: 'Handcrafted with Love', desc: 'Each piece is made with care and attention to detail', color: 'primary' },
-              { icon: Sparkles, title: 'Custom Creations', desc: 'Personalize your gifts exactly how you want them', color: 'secondary' },
-              { icon: Package, title: 'Fast Delivery', desc: 'Shipped across India within 5-10 business days', color: 'accent' },
+              { icon: Heart, title: 'Handcrafted with Love', desc: 'Each piece is made with care and attention to detail' },
+              { icon: Sparkles, title: 'Custom Creations', desc: 'Personalize your gifts exactly how you want them' },
+              { icon: Package, title: 'Fast Delivery', desc: 'Shipped across India within 5-10 business days' },
             ].map((feature, idx) => (
               <motion.div
                 key={idx}

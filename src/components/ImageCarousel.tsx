@@ -78,13 +78,13 @@ export default function ImageCarousel({ images, alt }: ImageCarouselProps) {
       </div>
 
       {/* Lightbox */}
-      <Lightbox
-        images={images}
-        initialIndex={selectedImage}
-        isOpen={lightboxOpen}
-        onClose={() => setLightboxOpen(false)}
-        alt={alt}
-      />
+      {lightboxOpen && (
+        <Lightbox
+          images={images}
+          initialIndex={selectedImage}
+          onClose={() => setLightboxOpen(false)}
+        />
+      )}
     </>
   );
 }
