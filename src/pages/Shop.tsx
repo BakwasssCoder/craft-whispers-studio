@@ -1,128 +1,120 @@
 import { useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import ProductCard from '@/components/ProductCard';
 import { Button } from '@/components/ui/button';
+import { useProducts, useCategories } from '@/hooks/useProducts';
+import { ProductCardSkeleton } from '@/components/skeletons/ProductCardSkeleton';
+import { motion } from 'framer-motion';
 
 export default function Shop() {
-  const [selectedCategory, setSelectedCategory] = useState('all');
+  const [searchParams, setSearchParams] = useSearchParams();
+  const categoryParam = searchParams.get('category') || 'all';
+  const [selectedCategory, setSelectedCategory] = useState(categoryParam);
 
-  const categories = [
-    { id: 'all', name: 'All Products' },
-    { id: 'earings', name: 'Earings' },
-    { id: 'hijab', name: 'Hijab' },
-    { id: 'hijab-pin', name: 'Hijab PIN' },
-    { id: 'jewellery', name: 'JEWELLERY' },
-  ];
+  const { data: products, isLoading: productsLoading } = useProducts();
+  const { data: categories, isLoading: categoriesLoading } = useCategories();
 
-  // New products based on user's request
-  const products = [
-    {
-      id: '1',
-      name: 'Earings',
-      price: 59,
-      image: 'https://stitched-with-love2.odoo.com/web/image/product.product/2/image_1024/Earings?unique=bf9ba13',
-      category: 'earings',
-    },
-    {
-      id: '2',
-      name: 'Silver Earings',
-      price: 129,
-      image: 'https://stitched-with-love2.odoo.com/web/image/product.product/3/image_1024/Silver%20Earings?unique=26eabc1',
-      category: 'earings',
-    },
-    {
-      id: '3',
-      name: 'Embroidery Machine Work (customised)',
-      price: 1000,
-      image: 'https://stitched-with-love2.odoo.com/web/image/product.product/4/image_1024/Embroidery%20Machine%20Work%20(customised)?unique=8c103ef',
-      category: 'jewellery',
-    },
-    {
-      id: '4',
-      name: 'Sahaa Earings',
-      price: 300,
-      image: 'https://stitched-with-love2.odoo.com/web/image/product.product/5/image_1024/Sahaa%20Earings?unique=6a45268',
-      category: 'earings',
-    },
-    {
-      id: '5',
-      name: 'Custom Hijab Design',
-      price: 800,
-      image: 'https://stitched-with-love2.odoo.com/web/image/product.product/6/image_1024/Custom%20Hijab%20Design?unique=b46a5d9',
-      category: 'hijab',
-    },
-    {
-      id: '6',
-      name: 'Leaf style brooches',
-      price: 200,
-      image: 'https://stitched-with-love2.odoo.com/web/image/product.product/7/image_1024/Leaf%20style%20brooches?unique=d62a7d8',
-      category: 'jewellery',
-    },
-    {
-      id: '7',
-      name: 'Embroidery hijab',
-      price: 1900,
-      image: 'https://stitched-with-love2.odoo.com/web/image/product.product/13/image_1024/Embroidery%20hijab?unique=d86ef6c',
-      category: 'hijab',
-    },
-    {
-      id: '8',
-      name: 'HANDKERCHIEF',
-      price: 266,
-      image: 'https://stitched-with-love2.odoo.com/web/image/product.product/14/image_1024/HANDKERCHIEF?unique=529d99a',
-      category: 'hijab',
-    },
-    {
-      id: '9',
-      name: 'Black Hijab',
-      price: 1600,
-      image: 'https://stitched-with-love2.odoo.com/web/image/product.product/15/image_1024/Black%20Hijab?unique=cde27cc',
-      category: 'hijab',
-    },
-  ];
+  const handleCategoryChange = (categorySlug: string) => {
+    setSelectedCategory(categorySlug);
+    if (categorySlug === 'all') {
+      searchParams.delete('category');
+    } else {
+      searchParams.set('category', categorySlug);
+    }
+    setSearchParams(searchParams);
+  };
 
   const filteredProducts = selectedCategory === 'all' 
     ? products 
-    : products.filter(p => p.category === selectedCategory);
+    : products?.filter(p => p.category?.slug === selectedCategory);
 
   return (
-    <div className="min-h-screen py-12">
+    <div className="min-h-screen py-8 md:py-12">
       <div className="container mx-auto px-4">
         {/* Header */}
-        <div className="text-center mb-12">
-          <h1 className="text-4xl md:text-5xl font-serif font-bold mb-4">
+        <motion.div 
+          className="text-center mb-8 md:mb-12"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+        >
+          <h1 className="text-3xl md:text-4xl lg:text-5xl font-serif font-bold mb-3 md:mb-4">
             Shop Our Collection
           </h1>
-          <p className="text-muted-foreground text-lg">
+          <p className="text-muted-foreground text-base md:text-lg">
             Unique handmade pieces crafted with love
           </p>
-        </div>
+        </motion.div>
 
         {/* Category Filter */}
-        <div className="flex flex-wrap gap-2 justify-center mb-12">
-          {categories.map((cat) => (
+        <motion.div 
+          className="flex flex-wrap gap-2 justify-center mb-8 md:mb-12"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.1 }}
+        >
+          <Button
+            variant={selectedCategory === 'all' ? 'default' : 'outline'}
+            onClick={() => handleCategoryChange('all')}
+            className="text-sm"
+          >
+            All Products
+          </Button>
+          {!categoriesLoading && categories?.map((cat) => (
             <Button
               key={cat.id}
-              variant={selectedCategory === cat.id ? 'default' : 'outline'}
-              onClick={() => setSelectedCategory(cat.id)}
+              variant={selectedCategory === cat.slug ? 'default' : 'outline'}
+              onClick={() => handleCategoryChange(cat.slug)}
+              className="text-sm"
             >
               {cat.name}
             </Button>
           ))}
-        </div>
+        </motion.div>
 
         {/* Products Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {filteredProducts.map((product) => (
-            <ProductCard key={product.id} {...product} category={categories.find(c => c.id === product.category)?.name || ''} />
-          ))}
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-6">
+          {productsLoading ? (
+            Array.from({ length: 8 }).map((_, i) => (
+              <ProductCardSkeleton key={i} />
+            ))
+          ) : (
+            filteredProducts?.map((product, idx) => (
+              <motion.div
+                key={product.id}
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4, delay: idx * 0.05 }}
+              >
+                <ProductCard 
+                  id={product.slug}
+                  name={product.name}
+                  price={Number(product.price)}
+                  image={product.images?.[0] || 'https://images.unsplash.com/photo-1549465220-1a8b9238cd48?w=800'}
+                  category={product.category?.name || 'Handmade'}
+                />
+              </motion.div>
+            ))
+          )}
         </div>
 
-        {filteredProducts.length === 0 && (
-          <div className="text-center py-12">
+        {!productsLoading && filteredProducts?.length === 0 && (
+          <motion.div 
+            className="text-center py-12"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+          >
             <p className="text-muted-foreground text-lg">
               No products found in this category.
             </p>
-          </div>
+            <Button 
+              variant="outline" 
+              className="mt-4"
+              onClick={() => handleCategoryChange('all')}
+            >
+              View All Products
+            </Button>
+          </motion.div>
         )}
       </div>
     </div>
