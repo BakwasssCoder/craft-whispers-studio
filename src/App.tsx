@@ -18,20 +18,27 @@ import Contact from "./pages/Contact";
 import Cart from "./pages/Cart";
 import Checkout from "./pages/Checkout";
 import NotFound from "./pages/NotFound";
+import AdminLogin from "./pages/AdminLogin";
+import AdminDashboard from "./pages/admin/AdminDashboard";
+import AdminProducts from "./pages/admin/AdminProducts";
+import AdminCategories from "./pages/admin/AdminCategories";
+import AdminAnnouncements from "./pages/admin/AdminAnnouncements";
+import AdminHeroBanners from "./pages/admin/AdminHeroBanners";
+import AdminGallery from "./pages/admin/AdminGallery";
+import AdminFaq from "./pages/admin/AdminFaq";
+import AdminSiteContent from "./pages/admin/AdminSiteContent";
+import AdminOrders from "./pages/admin/AdminOrders";
 import { CartProvider } from "./context/CartContext";
 import { FavoritesProvider } from "./context/FavoritesContext";
 import { FloatingWhatsAppButton } from "./components/FloatingWhatsAppButton";
 
 const queryClient = new QueryClient();
 
-// Scroll to top on route change
 function ScrollToTop() {
   const { pathname } = useLocation();
-
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [pathname]);
-
   return null;
 }
 
@@ -39,25 +46,42 @@ function AppContent() {
   const location = useLocation();
   const [isLoading, setIsLoading] = useState(false);
   const [isInitialLoad, setIsInitialLoad] = useState(true);
+  const isAdminRoute = location.pathname.startsWith('/admin');
 
   useEffect(() => {
     if (isInitialLoad) {
-      const timer = setTimeout(() => {
-        setIsInitialLoad(false);
-      }, 1500);
+      const timer = setTimeout(() => setIsInitialLoad(false), 1500);
       return () => clearTimeout(timer);
     }
   }, [isInitialLoad]);
 
   useEffect(() => {
-    if (!isInitialLoad) {
+    if (!isInitialLoad && !isAdminRoute) {
       setIsLoading(true);
-      const timer = setTimeout(() => {
-        setIsLoading(false);
-      }, 600);
+      const timer = setTimeout(() => setIsLoading(false), 600);
       return () => clearTimeout(timer);
     }
-  }, [location.pathname, isInitialLoad]);
+  }, [location.pathname, isInitialLoad, isAdminRoute]);
+
+  if (isAdminRoute) {
+    return (
+      <>
+        <ScrollToTop />
+        <Routes>
+          <Route path="/admin/login" element={<AdminLogin />} />
+          <Route path="/admin" element={<AdminDashboard />} />
+          <Route path="/admin/products" element={<AdminProducts />} />
+          <Route path="/admin/categories" element={<AdminCategories />} />
+          <Route path="/admin/announcements" element={<AdminAnnouncements />} />
+          <Route path="/admin/hero-banners" element={<AdminHeroBanners />} />
+          <Route path="/admin/gallery" element={<AdminGallery />} />
+          <Route path="/admin/faq" element={<AdminFaq />} />
+          <Route path="/admin/site-content" element={<AdminSiteContent />} />
+          <Route path="/admin/orders" element={<AdminOrders />} />
+        </Routes>
+      </>
+    );
+  }
 
   return (
     <>
@@ -75,7 +99,6 @@ function AppContent() {
         <Route path="/contact" element={<Contact />} />
         <Route path="/cart" element={<Cart />} />
         <Route path="/checkout" element={<Checkout />} />
-        {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
         <Route path="*" element={<NotFound />} />
       </Routes>
       <Footer />
