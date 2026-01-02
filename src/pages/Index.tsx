@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import ProductCard from '@/components/ProductCard';
 import { ArrowRight, Sparkles, Heart, Package } from 'lucide-react';
 import { motion, useScroll, useTransform } from 'framer-motion';
-import { useRef } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { useFeaturedProducts } from '@/hooks/useProducts';
 import { useHeroBanners } from '@/hooks/useHeroBanners';
 import { useGalleryImages } from '@/hooks/useGallery';
@@ -11,8 +11,14 @@ import { ProductCardSkeleton } from '@/components/skeletons/ProductCardSkeleton'
 
 export default function Index() {
   const heroRef = useRef<HTMLDivElement>(null);
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
   const { scrollYProgress } = useScroll({
-    target: heroRef,
+    target: isMounted ? heroRef : undefined,
     offset: ['start start', 'end start'],
   });
 
