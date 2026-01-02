@@ -44,24 +44,14 @@ function ScrollToTop() {
 
 function AppContent() {
   const location = useLocation();
-  const [isLoading, setIsLoading] = useState(false);
-  const [isInitialLoad, setIsInitialLoad] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
   const isAdminRoute = location.pathname.startsWith('/admin');
 
   useEffect(() => {
-    if (isInitialLoad) {
-      const timer = setTimeout(() => setIsInitialLoad(false), 1500);
-      return () => clearTimeout(timer);
-    }
-  }, [isInitialLoad]);
-
-  useEffect(() => {
-    if (!isInitialLoad && !isAdminRoute) {
-      setIsLoading(true);
-      const timer = setTimeout(() => setIsLoading(false), 600);
-      return () => clearTimeout(timer);
-    }
-  }, [location.pathname, isInitialLoad, isAdminRoute]);
+    // Initial load - show loader briefly
+    const timer = setTimeout(() => setIsLoading(false), 800);
+    return () => clearTimeout(timer);
+  }, []);
 
   if (isAdminRoute) {
     return (
@@ -86,7 +76,7 @@ function AppContent() {
   return (
     <>
       <ScrollToTop />
-      <SiteLoader isLoading={isInitialLoad || isLoading} />
+      <SiteLoader isLoading={isLoading} />
       <Header />
       <Routes>
         <Route path="/" element={<Index />} />
