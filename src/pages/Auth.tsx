@@ -1,16 +1,15 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Lock, Mail, Eye, EyeOff, Loader2, ArrowLeft } from 'lucide-react';
+import { Lock, Mail, Eye, EyeOff, Loader2, User, ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useToast } from '@/hooks/use-toast';
-import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 
-export default function AdminLogin() {
+export default function Auth() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -19,21 +18,33 @@ export default function AdminLogin() {
   const [activeTab, setActiveTab] = useState<'login' | 'signup'>('login');
   const { toast } = useToast();
   const navigate = useNavigate();
-  const { user, isAdmin, isLoading, signIn } = useAuth();
 
   useEffect(() => {
-    if (!isLoading && user && isAdmin) {
-      navigate('/admin');
-    }
-  }, [user, isAdmin, isLoading, navigate]);
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      if (session?.user) {
+        navigate('/');
+      }
+    });
+
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session?.user) {
+        navigate('/');
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  }, [navigate]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
 
     try {
-      const { error } = await signIn(email, password);
-      
+      const { error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+
       if (error) {
         toast({
           title: 'Login Failed',
@@ -43,9 +54,11 @@ export default function AdminLogin() {
         return;
       }
 
-      setTimeout(() => {
-        navigate('/admin');
-      }, 500);
+      toast({
+        title: 'Welcome back!',
+        description: 'You have successfully logged in.',
+      });
+      navigate('/');
     } catch (error) {
       toast({
         title: 'Error',
@@ -81,7 +94,7 @@ export default function AdminLogin() {
     setIsSubmitting(true);
 
     try {
-      const redirectUrl = `${window.location.origin}/admin`;
+      const redirectUrl = `${window.location.origin}/`;
       
       const { error } = await supabase.auth.signUp({
         email,
@@ -111,9 +124,9 @@ export default function AdminLogin() {
 
       toast({
         title: 'Account created!',
-        description: 'Please contact the admin to get admin access, or login to continue.',
+        description: 'You can now login with your credentials.',
       });
-      setActiveTab('login');
+      navigate('/');
     } catch (error) {
       toast({
         title: 'Error',
@@ -124,14 +137,6 @@ export default function AdminLogin() {
       setIsSubmitting(false);
     }
   };
-
-  if (isLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
-        <Loader2 className="w-8 h-8 animate-spin text-primary" />
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-background p-4">
@@ -151,11 +156,11 @@ export default function AdminLogin() {
 
           <div className="text-center mb-8">
             <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
-              <Lock className="w-8 h-8 text-primary" />
+              <User className="w-8 h-8 text-primary" />
             </div>
-            <h1 className="text-2xl font-bold text-foreground">Admin Access</h1>
+            <h1 className="text-2xl font-bold text-foreground">Welcome</h1>
             <p className="text-muted-foreground mt-2">
-              Sign in or create an admin account
+              Sign in or create an account
             </p>
           </div>
 
@@ -176,7 +181,7 @@ export default function AdminLogin() {
                       type="email"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
-                      placeholder="admin@example.com"
+                      placeholder="you@example.com"
                       className="pl-10"
                       required
                     />
@@ -230,7 +235,7 @@ export default function AdminLogin() {
                       type="email"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
-                      placeholder="admin@example.com"
+                      placeholder="you@example.com"
                       className="pl-10"
                       required
                     />
