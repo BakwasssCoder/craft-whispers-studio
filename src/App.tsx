@@ -7,6 +7,7 @@ import { useState, useEffect } from "react";
 import SiteLoader from "./components/SiteLoader";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
+import MobileBottomNav from "./components/MobileBottomNav";
 import Index from "./pages/Index";
 import Shop from "./pages/Shop";
 import Product from "./pages/Product";
@@ -79,21 +80,24 @@ function AppContent() {
       <ScrollToTop />
       <SiteLoader isLoading={isLoading} />
       <Header />
-      <Routes>
-        <Route path="/" element={<Index />} />
-        <Route path="/shop" element={<Shop />} />
-        <Route path="/product/:id" element={<Product />} />
-        <Route path="/custom-order" element={<CustomOrder />} />
-        <Route path="/gallery" element={<Gallery />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/faq" element={<FAQ />} />
-        <Route path="/contact" element={<Contact />} />
-        <Route path="/cart" element={<Cart />} />
-        <Route path="/checkout" element={<Checkout />} />
-        <Route path="/auth" element={<Auth />} />
-        <Route path="*" element={<NotFound />} />
-      </Routes>
+      <main className="pb-20 md:pb-0">
+        <Routes>
+          <Route path="/" element={<Index />} />
+          <Route path="/shop" element={<Shop />} />
+          <Route path="/product/:id" element={<Product />} />
+          <Route path="/custom-order" element={<CustomOrder />} />
+          <Route path="/gallery" element={<Gallery />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/faq" element={<FAQ />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/cart" element={<Cart />} />
+          <Route path="/checkout" element={<Checkout />} />
+          <Route path="/auth" element={<Auth />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </main>
       <Footer />
+      <MobileBottomNav />
       <FloatingWhatsAppButton />
     </>
   );

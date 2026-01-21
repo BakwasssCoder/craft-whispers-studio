@@ -150,10 +150,10 @@ export default function Header() {
                 </Link>
               )}
 
-              {/* Mobile Menu Button */}
+              {/* Mobile Menu Button - only show on tablet, hidden on mobile (bottom nav) */}
               <button
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="lg:hidden p-2"
+                className="hidden md:block lg:hidden p-2"
                 aria-label="Toggle menu"
               >
                 {mobileMenuOpen ? (
@@ -165,9 +165,9 @@ export default function Header() {
             </div>
           </div>
 
-          {/* Mobile Navigation */}
+          {/* Tablet Navigation (md screens only) */}
           {mobileMenuOpen && (
-            <div className="lg:hidden mt-4 pb-4 space-y-1 animate-fade-in">
+            <div className="hidden md:block lg:hidden mt-4 pb-4 space-y-1 animate-fade-in">
               {navLinks.map((link) => (
                 <Link
                   key={link.path}

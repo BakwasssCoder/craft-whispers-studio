@@ -10,6 +10,7 @@ import { Switch } from '@/components/ui/switch';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { useToast } from '@/hooks/use-toast';
 import { Plus, Pencil, Trash2, Loader2 } from 'lucide-react';
+import ImageUpload from '@/components/admin/ImageUpload';
 
 interface GalleryImage {
   id: string;
@@ -23,6 +24,7 @@ interface GalleryImage {
 export default function AdminGallery() {
   const [isOpen, setIsOpen] = useState(false);
   const [editing, setEditing] = useState<GalleryImage | null>(null);
+  const [imageUrl, setImageUrl] = useState('');
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
@@ -47,7 +49,7 @@ export default function AdminGallery() {
       queryClient.invalidateQueries({ queryKey: ['admin-gallery'] });
       queryClient.invalidateQueries({ queryKey: ['gallery-images'] });
       toast({ title: 'Image added successfully' });
-      setIsOpen(false);
+      closeDialog();
     },
     onError: (error: Error) => {
       toast({ title: 'Error adding image', description: error.message, variant: 'destructive' });
@@ -63,8 +65,7 @@ export default function AdminGallery() {
       queryClient.invalidateQueries({ queryKey: ['admin-gallery'] });
       queryClient.invalidateQueries({ queryKey: ['gallery-images'] });
       toast({ title: 'Image updated successfully' });
-      setIsOpen(false);
-      setEditing(null);
+      closeDialog();
     },
     onError: (error: Error) => {
       toast({ title: 'Error updating image', description: error.message, variant: 'destructive' });
@@ -90,8 +91,13 @@ export default function AdminGallery() {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
     
+    if (!imageUrl) {
+      toast({ title: 'Image required', description: 'Please upload or enter an image URL', variant: 'destructive' });
+      return;
+    }
+
     const item = {
-      image_url: formData.get('image_url') as string,
+      image_url: imageUrl,
       title: formData.get('title') as string || null,
       description: formData.get('description') as string || null,
       display_order: parseInt(formData.get('display_order') as string) || 0,
@@ -107,12 +113,20 @@ export default function AdminGallery() {
 
   const openEditDialog = (item: GalleryImage) => {
     setEditing(item);
+    setImageUrl(item.image_url);
+    setIsOpen(true);
+  };
+
+  const openCreateDialog = () => {
+    setEditing(null);
+    setImageUrl('');
     setIsOpen(true);
   };
 
   const closeDialog = () => {
     setIsOpen(false);
     setEditing(null);
+    setImageUrl('');
   };
 
   return (
@@ -123,22 +137,23 @@ export default function AdminGallery() {
             <h1 className="text-3xl font-bold text-foreground">Gallery</h1>
             <p className="text-muted-foreground">Manage gallery images</p>
           </div>
-          <Dialog open={isOpen} onOpenChange={(open) => { if (!open) closeDialog(); else setIsOpen(true); }}>
+          <Dialog open={isOpen} onOpenChange={(open) => { if (!open) closeDialog(); else openCreateDialog(); }}>
             <DialogTrigger asChild>
               <Button>
                 <Plus className="w-4 h-4 mr-2" />
                 Add Image
               </Button>
             </DialogTrigger>
-            <DialogContent>
+            <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
               <DialogHeader>
                 <DialogTitle>{editing ? 'Edit Image' : 'Add New Image'}</DialogTitle>
               </DialogHeader>
               <form onSubmit={handleSubmit} className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="image_url">Image URL</Label>
-                  <Input id="image_url" name="image_url" defaultValue={editing?.image_url} required />
-                </div>
+                <ImageUpload 
+                  value={imageUrl} 
+                  onChange={setImageUrl} 
+                  label="Gallery Image"
+                />
                 <div className="space-y-2">
                   <Label htmlFor="title">Title (optional)</Label>
                   <Input id="title" name="title" defaultValue={editing?.title || ''} />
