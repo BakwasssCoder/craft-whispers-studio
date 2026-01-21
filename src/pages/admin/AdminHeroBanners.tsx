@@ -10,6 +10,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { useToast } from '@/hooks/use-toast';
 import { Plus, Pencil, Trash2, Loader2 } from 'lucide-react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import ImageUpload from '@/components/admin/ImageUpload';
 
 interface HeroBanner {
   id: string;
@@ -25,6 +26,7 @@ interface HeroBanner {
 export default function AdminHeroBanners() {
   const [isOpen, setIsOpen] = useState(false);
   const [editing, setEditing] = useState<HeroBanner | null>(null);
+  const [imageUrl, setImageUrl] = useState('');
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
@@ -49,7 +51,7 @@ export default function AdminHeroBanners() {
       queryClient.invalidateQueries({ queryKey: ['admin-hero-banners'] });
       queryClient.invalidateQueries({ queryKey: ['hero-banners'] });
       toast({ title: 'Hero banner created successfully' });
-      setIsOpen(false);
+      closeDialog();
     },
     onError: (error: Error) => {
       toast({ title: 'Error creating banner', description: error.message, variant: 'destructive' });
@@ -65,8 +67,7 @@ export default function AdminHeroBanners() {
       queryClient.invalidateQueries({ queryKey: ['admin-hero-banners'] });
       queryClient.invalidateQueries({ queryKey: ['hero-banners'] });
       toast({ title: 'Hero banner updated successfully' });
-      setIsOpen(false);
-      setEditing(null);
+      closeDialog();
     },
     onError: (error: Error) => {
       toast({ title: 'Error updating banner', description: error.message, variant: 'destructive' });
@@ -92,10 +93,15 @@ export default function AdminHeroBanners() {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
     
+    if (!imageUrl) {
+      toast({ title: 'Image required', description: 'Please upload or enter an image URL', variant: 'destructive' });
+      return;
+    }
+
     const item = {
       title: formData.get('title') as string,
       subtitle: formData.get('subtitle') as string || null,
-      image_url: formData.get('image_url') as string,
+      image_url: imageUrl,
       cta_text: formData.get('cta_text') as string || null,
       cta_link: formData.get('cta_link') as string || null,
       display_order: parseInt(formData.get('display_order') as string) || 0,
@@ -111,12 +117,20 @@ export default function AdminHeroBanners() {
 
   const openEditDialog = (item: HeroBanner) => {
     setEditing(item);
+    setImageUrl(item.image_url);
+    setIsOpen(true);
+  };
+
+  const openCreateDialog = () => {
+    setEditing(null);
+    setImageUrl('');
     setIsOpen(true);
   };
 
   const closeDialog = () => {
     setIsOpen(false);
     setEditing(null);
+    setImageUrl('');
   };
 
   return (
@@ -127,14 +141,14 @@ export default function AdminHeroBanners() {
             <h1 className="text-3xl font-bold text-foreground">Hero Banners</h1>
             <p className="text-muted-foreground">Manage homepage hero banners</p>
           </div>
-          <Dialog open={isOpen} onOpenChange={(open) => { if (!open) closeDialog(); else setIsOpen(true); }}>
+          <Dialog open={isOpen} onOpenChange={(open) => { if (!open) closeDialog(); else openCreateDialog(); }}>
             <DialogTrigger asChild>
               <Button>
                 <Plus className="w-4 h-4 mr-2" />
                 Add Banner
               </Button>
             </DialogTrigger>
-            <DialogContent>
+            <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
               <DialogHeader>
                 <DialogTitle>{editing ? 'Edit Banner' : 'Add New Banner'}</DialogTitle>
               </DialogHeader>
@@ -147,10 +161,13 @@ export default function AdminHeroBanners() {
                   <Label htmlFor="subtitle">Subtitle</Label>
                   <Input id="subtitle" name="subtitle" defaultValue={editing?.subtitle || ''} />
                 </div>
-                <div className="space-y-2">
-                  <Label htmlFor="image_url">Image URL</Label>
-                  <Input id="image_url" name="image_url" defaultValue={editing?.image_url} required />
-                </div>
+                
+                <ImageUpload 
+                  value={imageUrl} 
+                  onChange={setImageUrl} 
+                  label="Banner Image"
+                />
+
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="cta_text">Button Text</Label>
