@@ -12,6 +12,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { useToast } from '@/hooks/use-toast';
 import { Plus, Pencil, Trash2, Loader2 } from 'lucide-react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import MultiImageUpload from '@/components/admin/MultiImageUpload';
 
 interface Product {
   id: string;
@@ -30,6 +31,8 @@ interface Product {
 export default function AdminProducts() {
   const [isOpen, setIsOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
+  const [images, setImages] = useState<string[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState<string>('');
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
@@ -63,7 +66,7 @@ export default function AdminProducts() {
       queryClient.invalidateQueries({ queryKey: ['admin-products'] });
       queryClient.invalidateQueries({ queryKey: ['products'] });
       toast({ title: 'Product created successfully' });
-      setIsOpen(false);
+      closeDialog();
     },
     onError: (error: Error) => {
       toast({ title: 'Error creating product', description: error.message, variant: 'destructive' });
@@ -79,8 +82,7 @@ export default function AdminProducts() {
       queryClient.invalidateQueries({ queryKey: ['admin-products'] });
       queryClient.invalidateQueries({ queryKey: ['products'] });
       toast({ title: 'Product updated successfully' });
-      setIsOpen(false);
-      setEditingProduct(null);
+      closeDialog();
     },
     onError: (error: Error) => {
       toast({ title: 'Error updating product', description: error.message, variant: 'destructive' });
@@ -105,16 +107,20 @@ export default function AdminProducts() {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
-    const imagesStr = formData.get('images') as string;
-    
+
+    if (images.length === 0) {
+      toast({ title: 'Image required', description: 'Please add at least one image', variant: 'destructive' });
+      return;
+    }
+
     const product = {
       name: formData.get('name') as string,
       slug: (formData.get('name') as string).toLowerCase().replace(/\s+/g, '-'),
       description: formData.get('description') as string || null,
       price: parseFloat(formData.get('price') as string),
       discount_price: formData.get('discount_price') ? parseFloat(formData.get('discount_price') as string) : null,
-      category_id: formData.get('category_id') as string || null,
-      images: imagesStr ? imagesStr.split(',').map(s => s.trim()) : [],
+      category_id: selectedCategory || null,
+      images: images,
       is_featured: formData.get('is_featured') === 'on',
       is_active: formData.get('is_active') === 'on',
       display_order: parseInt(formData.get('display_order') as string) || 0,
@@ -129,12 +135,23 @@ export default function AdminProducts() {
 
   const openEditDialog = (product: Product) => {
     setEditingProduct(product);
+    setImages(product.images || []);
+    setSelectedCategory(product.category_id || '');
+    setIsOpen(true);
+  };
+
+  const openCreateDialog = () => {
+    setEditingProduct(null);
+    setImages([]);
+    setSelectedCategory('');
     setIsOpen(true);
   };
 
   const closeDialog = () => {
     setIsOpen(false);
     setEditingProduct(null);
+    setImages([]);
+    setSelectedCategory('');
   };
 
   return (
@@ -145,7 +162,7 @@ export default function AdminProducts() {
             <h1 className="text-3xl font-bold text-foreground">Products</h1>
             <p className="text-muted-foreground">Manage your product catalog</p>
           </div>
-          <Dialog open={isOpen} onOpenChange={(open) => { if (!open) closeDialog(); else setIsOpen(true); }}>
+          <Dialog open={isOpen} onOpenChange={(open) => { if (!open) closeDialog(); else openCreateDialog(); }}>
             <DialogTrigger asChild>
               <Button>
                 <Plus className="w-4 h-4 mr-2" />
@@ -174,7 +191,7 @@ export default function AdminProducts() {
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="category_id">Category</Label>
-                    <Select name="category_id" defaultValue={editingProduct?.category_id || ''}>
+                    <Select value={selectedCategory} onValueChange={setSelectedCategory}>
                       <SelectTrigger>
                         <SelectValue placeholder="Select category" />
                       </SelectTrigger>
@@ -190,10 +207,13 @@ export default function AdminProducts() {
                   <Label htmlFor="description">Description</Label>
                   <Textarea id="description" name="description" defaultValue={editingProduct?.description || ''} />
                 </div>
-                <div className="space-y-2">
-                  <Label htmlFor="images">Image URLs (comma separated)</Label>
-                  <Textarea id="images" name="images" defaultValue={editingProduct?.images.join(', ') || ''} placeholder="https://example.com/image1.jpg, https://example.com/image2.jpg" />
-                </div>
+                
+                <MultiImageUpload 
+                  value={images} 
+                  onChange={setImages} 
+                  label="Product Images"
+                />
+
                 <div className="grid grid-cols-3 gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="display_order">Display Order</Label>
