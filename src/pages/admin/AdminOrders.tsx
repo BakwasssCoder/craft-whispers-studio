@@ -4,9 +4,7 @@ import AdminLayout from '@/components/admin/AdminLayout';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Phone, Mail, Calendar, Trash2 } from 'lucide-react';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-
+import { Loader2, Phone, Mail, Calendar, Trash2, MessageCircle } from 'lucide-react';
 interface CustomOrder {
   id: string;
   customer_name: string;
@@ -73,6 +71,12 @@ export default function AdminOrders() {
       case 'cancelled': return 'bg-red-100 text-red-700';
       default: return 'bg-muted text-muted-foreground';
     }
+  };
+
+  const getWhatsAppLink = (order: CustomOrder) => {
+    const phone = order.customer_phone.replace(/\D/g, '');
+    const message = `Hello ${order.customer_name},\n\nThank you for your custom order request!\n\nOrder Details:\n- Occasion: ${order.occasion || 'Not specified'}\n- Budget: ${order.budget || 'Not specified'}\n- Deadline: ${order.deadline ? new Date(order.deadline).toLocaleDateString() : 'Not specified'}\n- Description: ${order.description}\n\nWe will get back to you shortly with more details.\n\nRegards,\nsaha's Clout`;
+    return `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
   };
 
   return (
@@ -159,6 +163,16 @@ export default function AdminOrders() {
                         <SelectItem value="cancelled">Cancelled</SelectItem>
                       </SelectContent>
                     </Select>
+                    <Button
+                      variant="whatsapp"
+                      size="sm"
+                      asChild
+                    >
+                      <a href={getWhatsAppLink(order)} target="_blank" rel="noopener noreferrer">
+                        <MessageCircle className="w-4 h-4 mr-1" />
+                        WhatsApp
+                      </a>
+                    </Button>
                     <Button
                       variant="outline"
                       size="sm"
