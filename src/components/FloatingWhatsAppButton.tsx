@@ -10,7 +10,7 @@ export function FloatingWhatsAppButton() {
     <Button
       variant="whatsapp"
       size="icon"
-      className="fixed bottom-6 right-6 h-14 w-14 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 z-50"
+      className="fixed bottom-24 md:bottom-6 right-6 h-14 w-14 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 z-50"
       onClick={handleClick}
     >
       <MessageCircle className="h-6 w-6" />
