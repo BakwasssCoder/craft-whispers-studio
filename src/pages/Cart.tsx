@@ -8,7 +8,7 @@ export default function Cart() {
   const { cartItems, updateQuantity, removeFromCart, getCartTotal } = useCart();
   
   const subtotal = getCartTotal();
-  const shippingText = "Calculated at checkout based on delivery location (PAN India Delivery)";
+  const shippingText = "The seller will confirm the shipping charges";
 
   return (
     <div className="min-h-screen py-12">

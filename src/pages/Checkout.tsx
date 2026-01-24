@@ -93,7 +93,7 @@ export default function Checkout() {
                 </div>
                 <div className="flex justify-between text-sm">
                   <span className="text-muted-foreground">Shipping</span>
-                  <span className="font-semibold">Calculated at checkout based on delivery location (PAN India Delivery)</span>
+                  <span className="font-semibold">The seller will confirm the shipping charges</span>
                 </div>
                 <div className="border-t border-border pt-3">
                   <div className="flex justify-between">
