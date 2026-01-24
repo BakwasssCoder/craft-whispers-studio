@@ -9,12 +9,15 @@ interface ProductCardProps {
   id: string;
   name: string;
   price: number;
+  discountPrice?: number | null;
   image: string;
   category: string;
 }
 
-export default function ProductCard({ id, name, price, image, category }: ProductCardProps) {
+export default function ProductCard({ id, name, price, discountPrice, image, category }: ProductCardProps) {
   const { addToCart } = useCart();
+  const hasDiscount = discountPrice && discountPrice < price;
+  const displayPrice = hasDiscount ? discountPrice : price;
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -50,7 +53,12 @@ export default function ProductCard({ id, name, price, image, category }: Produc
             {name}
           </h3>
         </Link>
-        <p className="text-primary font-bold text-lg md:text-xl">₹{price}</p>
+        <div className="flex items-center gap-2 flex-wrap">
+          <p className="text-primary font-bold text-lg md:text-xl">₹{displayPrice}</p>
+          {hasDiscount && (
+            <p className="text-muted-foreground line-through text-sm">₹{price}</p>
+          )}
+        </div>
       </CardContent>
       <CardFooter className="p-3 md:p-4 pt-0">
         <Button 

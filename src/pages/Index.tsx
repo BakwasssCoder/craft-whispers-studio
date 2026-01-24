@@ -194,6 +194,7 @@ export default function Index() {
                     id={product.slug}
                     name={product.name}
                     price={Number(product.price)}
+                    discountPrice={product.discount_price ? Number(product.discount_price) : null}
                     image={product.images?.[0] || 'https://images.unsplash.com/photo-1549465220-1a8b9238cd48?w=800'}
                     category={product.category?.name || 'Handmade'}
                   />
