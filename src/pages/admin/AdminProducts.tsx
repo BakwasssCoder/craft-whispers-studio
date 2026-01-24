@@ -169,12 +169,12 @@ export default function AdminProducts() {
                 Add Product
               </Button>
             </DialogTrigger>
-            <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+            <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto w-[95vw] sm:w-full">
               <DialogHeader>
                 <DialogTitle>{editingProduct ? 'Edit Product' : 'Add New Product'}</DialogTitle>
               </DialogHeader>
               <form onSubmit={handleSubmit} className="space-y-4">
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="name">Name</Label>
                     <Input id="name" name="name" defaultValue={editingProduct?.name} required />
@@ -184,7 +184,7 @@ export default function AdminProducts() {
                     <Input id="price" name="price" type="number" step="0.01" defaultValue={editingProduct?.price} required />
                   </div>
                 </div>
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="discount_price">Discount Price (₹)</Label>
                     <Input id="discount_price" name="discount_price" type="number" step="0.01" defaultValue={editingProduct?.discount_price || ''} />
@@ -214,16 +214,16 @@ export default function AdminProducts() {
                   label="Product Images"
                 />
 
-                <div className="grid grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="display_order">Display Order</Label>
                     <Input id="display_order" name="display_order" type="number" defaultValue={editingProduct?.display_order || 0} />
                   </div>
-                  <div className="flex items-center gap-2 pt-6">
+                  <div className="flex items-center gap-2 sm:pt-6">
                     <Switch id="is_featured" name="is_featured" defaultChecked={editingProduct?.is_featured} />
                     <Label htmlFor="is_featured">Featured</Label>
                   </div>
-                  <div className="flex items-center gap-2 pt-6">
+                  <div className="flex items-center gap-2 sm:pt-6">
                     <Switch id="is_active" name="is_active" defaultChecked={editingProduct?.is_active ?? true} />
                     <Label htmlFor="is_active">Active</Label>
                   </div>
@@ -245,57 +245,59 @@ export default function AdminProducts() {
             <Loader2 className="w-8 h-8 animate-spin text-primary" />
           </div>
         ) : (
-          <div className="bg-card rounded-xl border border-border overflow-hidden">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Image</TableHead>
-                  <TableHead>Name</TableHead>
-                  <TableHead>Price</TableHead>
-                  <TableHead>Featured</TableHead>
-                  <TableHead>Active</TableHead>
-                  <TableHead className="text-right">Actions</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {products?.map((product) => (
-                  <TableRow key={product.id}>
-                    <TableCell>
-                      {product.images[0] ? (
-                        <img src={product.images[0]} alt={product.name} className="w-12 h-12 object-cover rounded-lg" />
-                      ) : (
-                        <div className="w-12 h-12 bg-muted rounded-lg" />
-                      )}
-                    </TableCell>
-                    <TableCell className="font-medium">{product.name}</TableCell>
-                    <TableCell>
-                      {product.discount_price ? (
-                        <span>
-                          <span className="line-through text-muted-foreground">₹{product.price}</span>
-                          <span className="ml-2 text-primary">₹{product.discount_price}</span>
-                        </span>
-                      ) : (
-                        <span>₹{product.price}</span>
-                      )}
-                    </TableCell>
-                    <TableCell>{product.is_featured ? '⭐' : '-'}</TableCell>
-                    <TableCell>
-                      <span className={`px-2 py-1 rounded-full text-xs ${product.is_active ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
-                        {product.is_active ? 'Active' : 'Inactive'}
-                      </span>
-                    </TableCell>
-                    <TableCell className="text-right">
-                      <Button variant="ghost" size="icon" onClick={() => openEditDialog(product)}>
-                        <Pencil className="w-4 h-4" />
-                      </Button>
-                      <Button variant="ghost" size="icon" onClick={() => deleteMutation.mutate(product.id)}>
-                        <Trash2 className="w-4 h-4 text-destructive" />
-                      </Button>
-                    </TableCell>
+          <div className="bg-card rounded-xl border border-border overflow-x-auto">
+            <div className="min-w-[600px]">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Image</TableHead>
+                    <TableHead>Name</TableHead>
+                    <TableHead>Price</TableHead>
+                    <TableHead className="hidden sm:table-cell">Featured</TableHead>
+                    <TableHead className="hidden sm:table-cell">Active</TableHead>
+                    <TableHead className="text-right">Actions</TableHead>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+                </TableHeader>
+                <TableBody>
+                  {products?.map((product) => (
+                    <TableRow key={product.id}>
+                      <TableCell>
+                        {product.images[0] ? (
+                          <img src={product.images[0]} alt={product.name} className="w-10 h-10 sm:w-12 sm:h-12 object-cover rounded-lg" />
+                        ) : (
+                          <div className="w-10 h-10 sm:w-12 sm:h-12 bg-muted rounded-lg" />
+                        )}
+                      </TableCell>
+                      <TableCell className="font-medium text-sm">{product.name}</TableCell>
+                      <TableCell>
+                        {product.discount_price ? (
+                          <div className="flex flex-col sm:flex-row sm:gap-2">
+                            <span className="line-through text-muted-foreground text-xs sm:text-sm">₹{product.price}</span>
+                            <span className="text-primary text-sm">₹{product.discount_price}</span>
+                          </div>
+                        ) : (
+                          <span className="text-sm">₹{product.price}</span>
+                        )}
+                      </TableCell>
+                      <TableCell className="hidden sm:table-cell">{product.is_featured ? '⭐' : '-'}</TableCell>
+                      <TableCell className="hidden sm:table-cell">
+                        <span className={`px-2 py-1 rounded-full text-xs ${product.is_active ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
+                          {product.is_active ? 'Active' : 'Inactive'}
+                        </span>
+                      </TableCell>
+                      <TableCell className="text-right">
+                        <Button variant="ghost" size="icon" onClick={() => openEditDialog(product)}>
+                          <Pencil className="w-4 h-4" />
+                        </Button>
+                        <Button variant="ghost" size="icon" onClick={() => deleteMutation.mutate(product.id)}>
+                          <Trash2 className="w-4 h-4 text-destructive" />
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
           </div>
         )}
       </div>
